@@ -12,7 +12,7 @@ export class AppController {
     console.log(
       this.configService.get('PORT', { infer: true }),
       this.configService.get('MONGO_CONNECTION_STRING', { infer: true }),
-      this.configService.get('JWT_SECRET', { infer: true }),
+      this.configService.get('JWT_ACCESS_SECRET', { infer: true }),
     );
   }
 

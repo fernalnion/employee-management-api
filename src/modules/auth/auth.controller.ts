@@ -1,4 +1,12 @@
-import { Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiExtraModels,
@@ -6,14 +14,15 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { LocalAuthGuard } from 'src/guards/local-auth.guard';
-import { User } from 'src/interfaces/user.interface';
-import { LoginModel } from 'src/models/login.model';
-import { CreateUserModel } from 'src/models/register.model';
-import { ErrorResponse } from 'src/models/response.model';
+import { Request as RequestType } from 'express';
+import { AccessTokenAuthGuard } from 'src/guards/accessToken.guard';
+import { RefreshTokenAuthGuard } from 'src/guards/refreshToken.guard';
+import { AuthDto } from "src/models/auth.dto";
+import { ErrorResponse } from "src/models/error-response.dto";
+import { CreateUserDto } from "src/models/create-user.dto";
 import { AuthService } from 'src/services/auth.service';
 
-@ApiExtraModels(ErrorResponse, LoginModel, CreateUserModel)
+@ApiExtraModels(ErrorResponse, AuthDto, CreateUserDto)
 @ApiTags('Authendication')
 @Controller('auth')
 @ApiResponse({
@@ -32,12 +41,25 @@ import { AuthService } from 'src/services/auth.service';
   schema: { $ref: getSchemaPath(ErrorResponse) },
 })
 export class AuthController {
-  constructor(private readonly _authService: AuthService) {}
-  @UseGuards(LocalAuthGuard)
-  @Post('login')
-  @ApiExtraModels(LoginModel)
-  @ApiBody({ type: () => LoginModel })
-  async login(@Request() { user }: { user: User }) {
-    return this._authService.login(user);
+  constructor(private readonly _authService: AuthService) { }
+  @Post('signin')
+  @ApiBody({ type: () => AuthDto })
+  async login(@Body() data: AuthDto) {
+    return this._authService.singIn(data);
+  }
+
+  @UseGuards(AccessTokenAuthGuard)
+  @Get('logout')
+  async logout(@Req() req: RequestType & { user: any }) {
+    await this._authService.logout(req.user['sub']);
+    return;
+  }
+
+  @UseGuards(RefreshTokenAuthGuard)
+  @Get('refresh')
+  refreshTokens(@Request() req: any) {
+    const userId = req.user['sub'];
+    const refreshToken = req.user['refreshToken'];
+    return this._authService.refreshTokens(userId, refreshToken);
   }
 }

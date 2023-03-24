@@ -1,25 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ROLES } from 'src/enums/role.enum';
 
-export class CreateUserModel {
+export class UpdateUserDto {
   @ApiProperty({ type: String })
-  email = '';
+  firstname: string = '';
 
   @ApiProperty({ type: String })
-  firstname = '';
-
-  @ApiProperty({ type: String })
-  lastname = '';
-
-  @ApiProperty({ type: String })
-  password = '';
+  lastname: string = '';
 
   @ApiProperty({ type: String, enum: ROLES })
   role: ROLES = ROLES.USER;
 
   @ApiProperty({ type: String })
-  mobile = '';
+  mobile: string = '';
 
   @ApiProperty({ type: Number })
-  dob = 0;
+  dob: number = 0;
 }

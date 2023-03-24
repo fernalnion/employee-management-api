@@ -1,8 +1,8 @@
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 import { ROLES } from 'src/enums/role.enum';
 import { User } from 'src/interfaces/user.interface';
 
-export interface UserDocument extends User, Document {}
+export interface UserDocument extends User, Document { }
 
 export const UserSchema = new Schema({
   email: {
@@ -23,7 +23,7 @@ export const UserSchema = new Schema({
     type: String,
     require: true,
   },
-  passwordhash: {
+  password: {
     type: String,
     require: true,
   },
@@ -44,6 +44,10 @@ export const UserSchema = new Schema({
   verified: {
     type: Boolean,
     default: false,
+  },
+  refreshToken: {
+    type: String,
+    default: null,
   },
 });
 

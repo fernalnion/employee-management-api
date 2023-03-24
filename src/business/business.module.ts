@@ -2,36 +2,34 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { Config } from 'src/interfaces/config.interface';
 import { databaseproviders } from 'src/providers/database.provider';
+import { tokenProviders } from 'src/providers/token.provider';
 import { userProviders } from 'src/providers/user.provider';
 import { AuthService } from 'src/services/auth.service';
 import { HarshService } from 'src/services/hash.service';
+import { TokenService } from 'src/services/token.service';
 import { UserService } from 'src/services/user.service';
-import { JwtStrategy } from 'src/strategy/jwt.strategy';
-import { LocalStrategy } from 'src/strategy/local.strategy';
+import { AccessTokenStrategy } from 'src/strategy/accessToken.strategy';
+import { RefreshTokenStrategy } from 'src/strategy/refreshToken.strategy';
 
-const PROVIDERS = [...databaseproviders, ...userProviders];
+const PROVIDERS: Array<any> = [
+  ...databaseproviders,
+  ...userProviders,
+  ...tokenProviders,
+];
 
-const SERVICES = [AuthService, UserService, HarshService, ConfigService];
+const SERVICES: Array<any> = [
+  AuthService,
+  UserService,
+  HarshService,
+  ConfigService,
+  TokenService,
+];
 
-const STRATEGY = [LocalStrategy, JwtStrategy];
+const STRATEGY: Array<any> = [AccessTokenStrategy, RefreshTokenStrategy];
 
 @Module({
-  imports: [
-    ConfigModule,
-    PassportModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService<Config>) => {
-        return {
-          secret: configService.get<string>('JWT_SECRET'),
-          signOptions: { expiresIn: '24h' },
-        };
-      },
-      inject: [ConfigService],
-    }),
-  ],
+  imports: [ConfigModule, PassportModule, JwtModule.register({})],
   providers: [...PROVIDERS, ...SERVICES, ...STRATEGY],
   exports: [
     ...PROVIDERS,

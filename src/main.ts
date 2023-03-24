@@ -5,6 +5,7 @@ import { set } from 'mongoose';
 import { AppModule } from './app.module';
 import { Config } from './interfaces/config.interface';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -22,7 +23,13 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   // addons
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
+
+  app.use(cookieParser());
 
   await app.listen(configService.get<number>('PORT') ?? 3000);
   console.log(`Application running on:${await app.getUrl()}`);

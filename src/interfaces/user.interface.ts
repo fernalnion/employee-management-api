@@ -5,15 +5,16 @@ export interface User {
   email: string;
   firstname: string;
   lastname: string;
-  passwordhash: string;
+  password: string;
   role: ROLES;
   mobile: string;
   dob: number;
-  activated: boolean;
-  verified: boolean;
+  activated?: boolean;
+  verified?: boolean;
+  refreshToken?: string | null;
 }
 
 export interface Login {
-  identity: string;
+  email: string;
   password: string;
 }

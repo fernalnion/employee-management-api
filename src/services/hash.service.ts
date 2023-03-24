@@ -3,14 +3,14 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class HarshService {
-  hashPassword = async (password: string) => {
+  hashData = async (value: string) => {
     const saltOrRounds = 10;
-    const hash = await bcrypt.hash(password, saltOrRounds);
+    const hash = await bcrypt.hash(value, saltOrRounds);
     return hash;
   };
 
-  comparePassword = async (password: string, hash: string) => {
-    const result = await bcrypt.compare(password, hash);
+  compareData = async (value: string, hash: string) => {
+    const result = await bcrypt.compare(value, hash);
     return result;
   };
 }

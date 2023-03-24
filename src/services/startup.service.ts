@@ -1,6 +1,6 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ROLES } from 'src/enums/role.enum';
-import { CreateUserModel } from 'src/models/register.model';
+import { CreateUserDto } from "src/models/create-user.dto";
 import { UserService } from './user.service';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class StartupService implements OnApplicationBootstrap {
   async onApplicationBootstrap() {
     const activeUsers = await this._userService.activeUsers();
     if (!activeUsers) {
-      const user: CreateUserModel & {
+      const user: CreateUserDto & {
         activated: boolean;
         verified: boolean;
       } = {

@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ErrorResponse {
   @ApiProperty({ type: Boolean })
-  data = false;
+  data: boolean = false;
 
   @ApiProperty({ type: String })
-  message = '';
+  message: string = '';
 
   @ApiProperty({ type: Boolean })
-  error = true;
+  error: boolean = true;
 }
